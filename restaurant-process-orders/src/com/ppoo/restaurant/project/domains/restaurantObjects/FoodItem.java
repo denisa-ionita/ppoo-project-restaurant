@@ -1,11 +1,13 @@
-package com.ppoo.restaurant.project.domains;
+package com.ppoo.restaurant.project.domains.restaurantObjects;
+
+import com.ppoo.restaurant.project.domains.absstract.Item;
 
 public class FoodItem extends Item {
 
     private Integer caloriesNumber;
 
     public FoodItem(Long id, String name, Double price, Integer cantity, Integer caloriesNumber) {
-        super(id, name, price, cantity);
+        super(id, name, price);
         this.setVat(9);
         this.caloriesNumber = caloriesNumber;
     }

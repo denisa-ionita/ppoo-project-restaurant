@@ -1,29 +1,27 @@
-package com.ppoo.restaurant.project.domains;
+package com.ppoo.restaurant.project.domains.absstract;
 
 public abstract class Item {
 
-    private Long id;
+    private Long itemId;
     private String name;
     private Double price;
-    private Integer cantity;
     private Integer vat;
 
-    public Item(Long id, String name, Double price, Integer cantity) {
-        this.id = id;
+    public Item(Long id, String name, Double price) {
+        this.itemId = id;
         this.name = name;
         this.price = price;
-        this.cantity = cantity;
     }
 
     public Item() {
     }
 
-    public Long getId() {
-        return id;
+    public Long getItemId() {
+        return itemId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setItemId(Long itemId) {
+        this.itemId = itemId;
     }
 
     public String getName() {
@@ -40,14 +38,6 @@ public abstract class Item {
 
     public void setPrice(Double price) {
         this.price = price;
-    }
-
-    public Integer getCantity() {
-        return cantity;
-    }
-
-    public void setCantity(Integer cantity) {
-        this.cantity = cantity;
     }
 
     public Integer getVat() {
