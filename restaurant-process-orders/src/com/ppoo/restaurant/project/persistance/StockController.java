@@ -1,5 +1,6 @@
 package com.ppoo.restaurant.project.persistance;
 
+import com.ppoo.restaurant.project.domains.absstract.MenuItem;
 import com.ppoo.restaurant.project.domains.restaurantObjects.Menu;
 
 import java.util.Date;
@@ -10,14 +11,13 @@ public class StockController {
 
     Menu stock;
 
-    List<OrderOrStockItem> itemsFromStock;
+    List<MenuItem> itemsFromStock;
 
     public StockController(Menu stock){
-        stock.setStockDate(new Date());
         stock.setMenuList(getAllItemsFromStock());
     }
 
-    public List<OrderOrStockItem> getAllItemsFromStock(){
+    public List<MenuItem> getAllItemsFromStock(){
 
 
 
