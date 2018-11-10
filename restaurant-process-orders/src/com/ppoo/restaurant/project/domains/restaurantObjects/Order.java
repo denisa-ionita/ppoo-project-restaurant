@@ -1,5 +1,6 @@
 package com.ppoo.restaurant.project.domains.restaurantObjects;
 
+import com.ppoo.restaurant.project.domains.absstract.MenuItem;
 import com.ppoo.restaurant.project.domains.users.Waiter;
 
 import java.util.List;
@@ -7,10 +8,10 @@ import java.util.List;
 public class Order {
 
     private Long orderId;
-    private List<OrderItem> orderItemsList;
+    private List<MenuItem> orderItemsList;
     private Waiter waiter;
 
-    public Order(Long orderId, List<OrderItem> orderItemsList, Waiter waiter) {
+    public Order(Long orderId, List<MenuItem> orderItemsList, Waiter waiter) {
         this.orderId = orderId;
         this.orderItemsList = orderItemsList;
         this.waiter = waiter;
@@ -24,11 +25,11 @@ public class Order {
         this.orderId = orderId;
     }
 
-    public List<OrderItem> getOrderItemsList() {
+    public List<MenuItem> getOrderItemsList() {
         return orderItemsList;
     }
 
-    public void setOrderItemsList(List<OrderItem> orderItemsList) {
+    public void setOrderItemsList(List<MenuItem> orderItemsList) {
         this.orderItemsList = orderItemsList;
     }
 

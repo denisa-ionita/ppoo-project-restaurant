@@ -1,19 +1,19 @@
 package com.ppoo.restaurant.project.domains.absstract;
 
-public abstract class Item {
+public abstract class MenuItem {
 
     private Long itemId;
     private String name;
     private Double price;
     private Integer vat;
 
-    public Item(Long id, String name, Double price) {
+    public MenuItem(Long id, String name, Double price) {
         this.itemId = id;
         this.name = name;
         this.price = price;
     }
 
-    public Item() {
+    public MenuItem() {
     }
 
     public Long getItemId() {

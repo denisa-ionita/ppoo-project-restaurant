@@ -1,22 +1,22 @@
 package com.ppoo.restaurant.project.domains.restaurantObjects;
 
-import com.ppoo.restaurant.project.domains.absstract.Item;
+import com.ppoo.restaurant.project.domains.absstract.MenuItem;
 
-public class OrderItem{
+public class OrderItem {
 
-    private Item item;
+    private MenuItem item;
     private Integer itemCantity;
 
-    public OrderItem(Item item, Integer noItems) {
+    public OrderItem(MenuItem item, Integer noItems) {
         this.item = item;
         this.itemCantity = noItems;
     }
 
-    public Item getItem() {
+    public MenuItem getItem() {
         return item;
     }
 
-    public void setItem(Item item) {
+    public void setItem(MenuItem item) {
         this.item = item;
     }
 

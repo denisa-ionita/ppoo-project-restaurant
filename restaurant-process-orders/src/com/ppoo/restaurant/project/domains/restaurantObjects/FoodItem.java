@@ -1,8 +1,8 @@
 package com.ppoo.restaurant.project.domains.restaurantObjects;
 
-import com.ppoo.restaurant.project.domains.absstract.Item;
+import com.ppoo.restaurant.project.domains.absstract.MenuItem;
 
-public class FoodItem extends Item {
+public class FoodItem extends MenuItem {
 
     private Integer caloriesNumber;
 
