@@ -4,11 +4,9 @@ import com.ppoo.restaurant.project.domains.enums.EmployeeType;
 
 import java.io.Serializable;
 
-public abstract class RestaurantEmployee implements  Serializable{
+public abstract class RestaurantEmployee{
 
 //    private static final long serialVersionUID = 2L;
-
-    private static final long serialVersionUID = 4L;
 
     private Long employeeId;
     private String name;
@@ -18,6 +16,10 @@ public abstract class RestaurantEmployee implements  Serializable{
         this.employeeId = employeeId;
         this.name = name;
 //        this.employeeType = employeeType;
+    }
+
+    public RestaurantEmployee(){
+
     }
 
     public Long getEmployeeId() {

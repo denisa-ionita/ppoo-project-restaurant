@@ -6,9 +6,9 @@ import com.ppoo.restaurant.project.domains.interfaces.WaiterTasks;
 
 import java.io.Serializable;
 
-public class Waiter extends RestaurantEmployee implements WaiterTasks{
+public class Waiter extends RestaurantEmployee implements WaiterTasks, Serializable{
 
-    private static final long serialVersionUID = 5L;
+    static final long serialVersionUID = 1L;
 
     public Waiter(Long employeeId, String name) {
         super(employeeId, name);

@@ -6,9 +6,9 @@ import com.ppoo.restaurant.project.domains.interfaces.AdministratorTasks;
 
 import java.io.Serializable;
 
-public class Administrator extends RestaurantEmployee implements AdministratorTasks{
+public class Administrator extends RestaurantEmployee implements AdministratorTasks, Serializable{
 
-    private static final long serialVersionUID = 6L;
+    static final long serialVersionUID = 2L;
 
     public Administrator(Long employeeId, String name) {
         super(employeeId, name);

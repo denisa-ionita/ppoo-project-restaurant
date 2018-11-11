@@ -1,6 +1,7 @@
 package com.ppoo.restaurant.project.persistance;
 
 import com.ppoo.restaurant.project.domains.absstract.MenuItem;
+import com.ppoo.restaurant.project.domains.enums.EmployeeType;
 import com.ppoo.restaurant.project.domains.enums.MenuItemType;
 import com.ppoo.restaurant.project.domains.exceptions.InvalidInputException;
 import com.ppoo.restaurant.project.domains.restaurantObjects.DrinkItem;
@@ -16,16 +17,20 @@ import java.util.Scanner;
 
 public class SystemInputController {
 
+
+    FileController fileController;
     Scanner scanner;
 
-    public SystemInputController(){
+    Waiter waiter;
+
+    public SystemInputController(FileController fileController){
         scanner = new Scanner(System.in);
+        this.fileController = fileController;
     }
 
     public Order addNewOrder(Waiter waiter){
 
         Order order = null;
-        FileController fileController = new FileController();
 
         Integer orderItemNo = null;
         String viewItemsReposonse;
@@ -38,11 +43,13 @@ public class SystemInputController {
         System.out.print("Numar de obiecte din meniu pe care le veti introduce: ");
         orderItemNo = scanner.nextInt();
 
-        System.out.print("Doriti vizualizarea codurilor obiectelor? (D/N)");
+        System.out.print("Doriti vizualizarea codurilor obiectelor? (D/N): ");
         viewItemsReposonse = scanner.next();
         try{
             if(viewItemsReposonse.compareTo("D") == 0){
+
                 fileController.showMenu();
+
             } else
             if(viewItemsReposonse.compareTo("N") == 0){
             } else
@@ -51,7 +58,7 @@ public class SystemInputController {
             System.out.println(e);
         }
 
-        OrderItem orderItem = new OrderItem();
+        OrderItem orderItem;
 
         while(orderItemNo > 0){
 
@@ -70,8 +77,11 @@ public class SystemInputController {
             orderItemNo--;
         }
 
-        order.setOrderItemsList(orderItemList);
+        System.out.println(orderItemList.size());
 
+        order = new Order(fileController.getLastOrderId() + 1, orderItemList, waiter);
+
+        fileController.insertOrder(order);
 
         return order;
     }
@@ -94,7 +104,7 @@ public class SystemInputController {
             if(menuItemType.compareTo("M") == 0){
                 menuItemType1 = MenuItemType.FOOD;
             } else
-                if(menuItemType.compareTo("B") == 0){
+            if(menuItemType.compareTo("B") == 0){
                 menuItemType1 = MenuItemType.DRINK;
             } else
                 throw new InvalidInputException("Input invalid!");
@@ -120,5 +130,37 @@ public class SystemInputController {
         }
 
         return menuItem;
+    }
+
+    public boolean verifyWaiterInfo(){
+
+        System.out.print("Cod angajat: ");
+        Long employeeId;
+        employeeId = scanner.nextLong();
+
+        System.out.print("Nume: ");
+        String name;
+        name = scanner.next();
+
+        waiter = new Waiter(employeeId, name);
+
+        return fileController.checkEmployeeInfo(employeeId, name, EmployeeType.WAITER);
+    }
+
+    public boolean verifyAdminInfo(){
+
+        System.out.print("Cod angajat: ");
+        Long employeeId;
+        employeeId = scanner.nextLong();
+
+        System.out.print("Nume: ");
+        String name;
+        name = scanner.next();
+
+        return fileController.checkEmployeeInfo(employeeId, name, EmployeeType.ADMINISTRATOR);
+    }
+
+    public Waiter getWaiter() {
+        return waiter;
     }
 }
