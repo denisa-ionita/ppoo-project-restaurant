@@ -1,0 +1,2 @@
+1	Coca-Cola	5.0	DRINK	0.0
+2	Fanta	5.0	DRINK	0.0

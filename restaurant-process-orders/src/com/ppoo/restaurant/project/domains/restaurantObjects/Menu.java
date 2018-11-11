@@ -8,9 +8,6 @@ public class Menu {
 
     private List<MenuItem> menuList;
 
-    public Menu() {
-    }
-
     public Menu(List<MenuItem> stockList) {
         this.menuList = stockList;
     }
@@ -21,5 +18,11 @@ public class Menu {
 
     public void setMenuList(List<MenuItem> menuList) {
         this.menuList = menuList;
+    }
+
+    public void showMenuList(){
+        for(MenuItem menuItem: menuList){
+            System.out.println(menuItem.toString());
+        }
     }
 }

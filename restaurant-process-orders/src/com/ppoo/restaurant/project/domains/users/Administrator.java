@@ -8,9 +8,11 @@ import java.io.Serializable;
 
 public class Administrator extends RestaurantEmployee implements AdministratorTasks{
 
-    public Administrator(Long employeeId, String name, EmployeeType employeeType) {
-        super(employeeId, name, employeeType);
-//        setEmployeeType(EmployeeType.ADMINISTRATOR);
+    private static final long serialVersionUID = 6L;
+
+    public Administrator(Long employeeId, String name) {
+        super(employeeId, name);
+        setEmployeeType(EmployeeType.ADMINISTRATOR);
     }
 
     @Override

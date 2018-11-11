@@ -6,16 +6,18 @@ import java.io.Serializable;
 
 public abstract class RestaurantEmployee implements  Serializable{
 
-    private static final long serialVersionUID = 2L;
+//    private static final long serialVersionUID = 2L;
+
+    private static final long serialVersionUID = 4L;
 
     private Long employeeId;
     private String name;
     private EmployeeType employeeType;
 
-    public RestaurantEmployee(Long employeeId, String name, EmployeeType employeeType) {
+    public RestaurantEmployee(Long employeeId, String name) {
         this.employeeId = employeeId;
         this.name = name;
-        this.employeeType = employeeType;
+//        this.employeeType = employeeType;
     }
 
     public Long getEmployeeId() {

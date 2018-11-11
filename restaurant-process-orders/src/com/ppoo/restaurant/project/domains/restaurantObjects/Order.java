@@ -8,10 +8,10 @@ import java.util.List;
 public class Order {
 
     private Long orderId;
-    private List<MenuItem> orderItemsList;
+    private List<OrderItem> orderItemsList;
     private Waiter waiter;
 
-    public Order(Long orderId, List<MenuItem> orderItemsList, Waiter waiter) {
+    public Order(Long orderId, List<OrderItem> orderItemsList, Waiter waiter) {
         this.orderId = orderId;
         this.orderItemsList = orderItemsList;
         this.waiter = waiter;
@@ -25,11 +25,11 @@ public class Order {
         this.orderId = orderId;
     }
 
-    public List<MenuItem> getOrderItemsList() {
+    public List<OrderItem> getOrderItemsList() {
         return orderItemsList;
     }
 
-    public void setOrderItemsList(List<MenuItem> orderItemsList) {
+    public void setOrderItemsList(List<OrderItem> orderItemsList) {
         this.orderItemsList = orderItemsList;
     }
 

@@ -8,9 +8,11 @@ import java.io.Serializable;
 
 public class Waiter extends RestaurantEmployee implements WaiterTasks{
 
-    public Waiter(Long employeeId, String name, EmployeeType employeeType) {
-        super(employeeId, name, employeeType);
-//        setEmployeeType(EmployeeType.WAITER);
+    private static final long serialVersionUID = 5L;
+
+    public Waiter(Long employeeId, String name) {
+        super(employeeId, name);
+        setEmployeeType(EmployeeType.WAITER);
     }
 
     @Override
