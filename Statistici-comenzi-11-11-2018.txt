@@ -1,0 +1,8 @@
+Id_Comanda    Ospatar Valoare_totala
+1	IONEL	21.0
+2	IONEL	26.5
+3	GIGEL	61.0
+4	GIGEL	26.0
+5	GIGEL	41.0
+--------------------------------------------------------------
+TOTAL: 175.5

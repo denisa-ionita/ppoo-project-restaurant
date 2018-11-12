@@ -30,4 +30,12 @@ public class OrderItem {
     public void setItemCantity(Integer itemCantity) {
         this.itemCantity = itemCantity;
     }
+
+    @Override
+    public String toString() {
+        return "OrderItem{" +
+                "item=" + item +
+                ", itemCantity=" + itemCantity +
+                '}';
+    }
 }

@@ -130,9 +130,8 @@ public class MainAppMenu {
 					System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 					break;
 				case 3:
-					// scoate raport
-
-					// TO DO
+					// rapoarte
+					reportsMenu();
 					System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 					break;
 				case 4:
@@ -199,4 +198,49 @@ public class MainAppMenu {
 			}
 		}
 	}
+
+	private void reportsMenu(){
+
+		boolean ok = true;
+		while(ok){
+			System.out.println("1 Valori comenzi zilnice");
+			System.out.println("2 Cele mai vandute produse");
+			System.out.println("3 Iesire");
+			System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+			int choice = readOption();
+
+			switch (choice){
+				case 1:
+					System.out.println("Alegeti una din categoriile urmatoare: ");
+					System.out.println("	1. Valorile tuturor comenzilor grupate pe data");
+					System.out.println("	2. Valorile comenzilor cu data specificata");
+
+					Integer option;
+					option = scanner.nextInt();
+
+					String dateString;
+
+					if(option == 1){
+						systemInputController.valueOfAllOrders();
+					} else if(option == 2){
+						System.out.print("Introduceti data dorita (dd-MM-YYYY): ");
+						dateString = scanner.next();
+						systemInputController.valueOfOrdersByDate(dateString);
+					}
+					break;
+				case 2:
+					systemInputController.popularMenuItems();
+					break;
+				case 3:
+					ok = false;
+					break;
+				default:
+					System.out.println("ERROR: Operatie invalida!");
+					System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+					break;
+			}
+		}
+
+	}
+
 }

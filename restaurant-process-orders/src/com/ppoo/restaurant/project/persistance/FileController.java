@@ -12,8 +12,10 @@ import com.ppoo.restaurant.project.domains.restaurantObjects.OrderItem;
 import com.ppoo.restaurant.project.domains.users.Administrator;
 import com.ppoo.restaurant.project.domains.users.Waiter;
 import com.sun.glass.ui.Menu;
+import com.sun.org.apache.xpath.internal.operations.Or;
 
 import java.io.*;
+import java.text.ParseException;
 import java.util.*;
 
 public class FileController {
@@ -50,6 +52,7 @@ public class FileController {
         return new File(fileName);
     }
 
+    //GETTERS + SETTERS LISTS
     public List<MenuItem> getMenuItemsList() {
         return menuItems;
     }
@@ -66,6 +69,7 @@ public class FileController {
         this.menuItems = menuItems;
     }
 
+    //MENU_ITEM
     public void getMenu(){
 
         file = configureFile("meniu.txt");
@@ -114,7 +118,6 @@ public class FileController {
         }
     }
 
-    //MENU_ITEM
     public void insertMenuItem(MenuItem menuItem){
 
         file = configureFile("meniu.txt");
@@ -354,26 +357,32 @@ public class FileController {
             int lineNumber = 1;
             List<OrderItem> orderItemList = new ArrayList<>();
             RestaurantEmployee waiter = null;
+            Date date = null;
 
             while((line = currentBufferedReader.readLine()) != null){
 
-                if(lineNumber == 2) {
+                if(lineNumber == 3) {
                     // ospatarul
                     lineSplitted = line.split(": ");
                     waiter = getEmployeeByName(lineSplitted[1]);
-                } else if(lineNumber!=1 && line.compareTo("--------------------------------------------------------------") != 0 && !line.contains("TOTAL")){
+                } else if(lineNumber!=2 && !line.contains("-----") && !line.contains("TOTAL") && lineNumber !=1){
                     lineSplitted = line.split(" ");
                     // 0 - nume, 1 - x, 2 - number, 3 - =, 4 - total
                     MenuItem menuItem = getMenuItemByName(lineSplitted[0]);
 
                     OrderItem orderItem = new OrderItem(menuItem, Integer.valueOf(lineSplitted[2]));
                     orderItemList.add(orderItem);
+                } else if(lineNumber == 2){
+                    lineSplitted = line.split(": ");
+                    date = Constants.simpleDateFormat.parse(lineSplitted[1]);
                 }
 
                 lineNumber++;
             }
 
             order = new Order(Long.valueOf(fileNameSplit[1]), orderItemList, (Waiter) waiter);
+//            System.out.println(order.toString());
+            order.setOrderDate(date);
             orderList.add(order);
 
             currentBufferedReader.close();
@@ -383,6 +392,8 @@ public class FileController {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
             e.printStackTrace();
         }
     }
@@ -419,6 +430,8 @@ public class FileController {
 
         Double totalPrice = 0d;
 
+        Date currentDate = new Date();
+
         try{
 
             fileWriter = new FileWriter(file);
@@ -426,6 +439,7 @@ public class FileController {
 
             //orderId waiterId menuItem x cantity; menuItem x cantity....
             bufferedWriter.write("Comanda numarul: " + order.getOrderId() + System.lineSeparator());
+            bufferedWriter.write("Data: " + Constants.simpleDateFormat.format(currentDate));
             bufferedWriter.write("Ospatar: " + order.getWaiter().getName().toUpperCase() + System.lineSeparator());
             bufferedWriter.write("--------------------------------------------------------------" + System.lineSeparator());
 
@@ -483,6 +497,50 @@ public class FileController {
         }
 
         return orderList.get(indexOfCurrentEmployee);
+    }
+
+    public void printStatisticsOrdersByDate(List<Order> orderList, String fileName){
+
+        file = configureFile(fileName + ".txt");
+
+        Double total, totalOrderValueOfDay = 0d;
+
+        try {
+            fileWriter = new FileWriter(file);
+            bufferedWriter = new BufferedWriter(fileWriter);
+
+            if(fileName.compareTo("Statistici-valori-totale") == 0){
+                bufferedWriter.write("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" + System.lineSeparator());
+                bufferedWriter.write(Constants.simpleDateFormat.format(orderList.get(0).getOrderDate()) + System.lineSeparator());
+                bufferedWriter.write("Id_Comanda    Ospatar Valoare_totala" + System.lineSeparator());
+            }
+            else{
+                bufferedWriter.write("Id_Comanda    Ospatar Valoare_totala" + System.lineSeparator());
+            }
+
+            List<Order> orderListToGetData = getOrderList();
+
+            for(Order order:orderListToGetData){
+
+                total = 0d;
+
+                for(OrderItem orderItem:order.getOrderItemsList()){
+                    total += orderItem.getItem().getPrice()*orderItem.getItemCantity();
+                }
+
+                totalOrderValueOfDay += total;
+                bufferedWriter.write(order.getOrderId() + "\t" + order.getWaiter().getName() + "\t" + total + System.lineSeparator());
+            }
+
+            bufferedWriter.write("--------------------------------------------------------------" + System.lineSeparator());
+            bufferedWriter.write("TOTAL: " + totalOrderValueOfDay + System.lineSeparator());
+
+            bufferedWriter.close();
+            fileWriter.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     //EMPLOYEES

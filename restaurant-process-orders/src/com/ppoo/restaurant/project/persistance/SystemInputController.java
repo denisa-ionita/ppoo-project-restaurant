@@ -2,6 +2,7 @@ package com.ppoo.restaurant.project.persistance;
 
 import com.ppoo.restaurant.project.domains.absstract.MenuItem;
 import com.ppoo.restaurant.project.domains.absstract.RestaurantEmployee;
+import com.ppoo.restaurant.project.domains.constants.Constants;
 import com.ppoo.restaurant.project.domains.enums.EmployeeType;
 import com.ppoo.restaurant.project.domains.enums.MenuItemType;
 import com.ppoo.restaurant.project.domains.exceptions.InvalidInputException;
@@ -12,9 +13,8 @@ import com.ppoo.restaurant.project.domains.restaurantObjects.OrderItem;
 import com.ppoo.restaurant.project.domains.users.Administrator;
 import com.ppoo.restaurant.project.domains.users.Waiter;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.text.ParseException;
+import java.util.*;
 
 public class SystemInputController {
 
@@ -24,13 +24,24 @@ public class SystemInputController {
 
     Waiter waiter;
 
+    Map<Date, List<Order>> orderMap;
+
     public SystemInputController(FileController fileController){
         scanner = new Scanner(System.in);
         this.fileController = fileController;
+        this.orderMap = new HashMap<>();
     }
 
     public Waiter getWaiter() {
         return waiter;
+    }
+
+    public Map<Date, List<Order>> getOrderMap() {
+        return orderMap;
+    }
+
+    public void setOrderMap(Map<Date, List<Order>> orderMap) {
+        this.orderMap = orderMap;
     }
 
     public List<OrderItem> insertOrderItemsFromSystemInput(){
@@ -267,6 +278,89 @@ public class SystemInputController {
                 new Administrator(fileController.getLastEmployeeId() + 1, employeeName);
 
         fileController.insertNewEmployee(newEmployee);
+
+    }
+
+    public void popularMenuItems(){
+
+        List<OrderItem> allOrderItems = new ArrayList<>();
+
+        List<Order> allOrders = fileController.getOrderList();
+
+        for(Order order:allOrders){
+            allOrderItems.addAll(order.getOrderItemsList());
+        }
+
+        System.out.println("allOrders size: " + allOrders.size());
+        System.out.println("allOrderItems size: " + allOrderItems.size());
+        Set<OrderItem> orderItemsSet = new HashSet<>();
+
+        for(OrderItem orderItem:allOrderItems){
+
+            System.out.println("list");
+            System.out.println(orderItem.toString());
+            if(orderItemsSet.size() > 0)
+            for(OrderItem setOrderItem:orderItemsSet){
+                System.out.println("set");
+                System.out.println(setOrderItem.toString());
+                if(setOrderItem.getItem().getName().compareTo(orderItem.getItem().getName()) == 0){
+                    orderItem.setItemCantity(orderItem.getItemCantity() + setOrderItem.getItemCantity());
+                }
+            }
+            orderItemsSet.add(orderItem);
+        }
+
+        System.out.println(orderItemsSet.size());
+    }
+
+    public void putValuesIntoHashMap(){
+
+        List<Order> currentOrderList = new ArrayList<>();
+        List<Order> orderListExtractedFromFile = fileController.getOrderList();
+
+        for(Order order: orderListExtractedFromFile){
+            if(orderMap.get(Constants.simpleDateFormat.format(order.getOrderDate())) != null){
+                currentOrderList = orderMap.get(Constants.simpleDateFormat.format(order.getOrderDate()));
+            } else {
+                currentOrderList = new ArrayList<>();
+            }
+            currentOrderList.add(order);
+            orderMap.put(order.getOrderDate(), currentOrderList);
+        }
+
+//        System.out.println("size hashMap: " + orderMap.size());
+
+
+    }
+
+    public void valueOfAllOrders(){
+
+        putValuesIntoHashMap();
+
+        List<Order> currentOrderList = new ArrayList<>();
+
+        for(Map.Entry<Date, List<Order>> entry:orderMap.entrySet()){
+            currentOrderList = entry.getValue();
+//            System.out.println(entry.getKey());
+//            System.out.println("List size of map: " + currentOrderList.size());
+            fileController.printStatisticsOrdersByDate(currentOrderList, "Statistici-valori-totale");
+        }
+    }
+
+    public void valueOfOrdersByDate(String dateString){
+
+        putValuesIntoHashMap();
+        List<Order> currentOrderList;
+        System.out.println(orderMap.size());
+
+        try {
+            currentOrderList = orderMap.get(Constants.simpleDateFormat.parse(dateString));
+
+            fileController.printStatisticsOrdersByDate(currentOrderList, "Statistici-comenzi-" + dateString);
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
     }
 }
