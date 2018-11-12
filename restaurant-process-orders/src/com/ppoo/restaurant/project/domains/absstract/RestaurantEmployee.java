@@ -1,6 +1,7 @@
 package com.ppoo.restaurant.project.domains.absstract;
 
 import com.ppoo.restaurant.project.domains.enums.EmployeeType;
+import com.ppoo.restaurant.project.domains.exceptions.InvalidInputException;
 
 import java.io.Serializable;
 
@@ -12,10 +13,12 @@ public abstract class RestaurantEmployee{
     private String name;
     private EmployeeType employeeType;
 
-    public RestaurantEmployee(Long employeeId, String name) {
+    public RestaurantEmployee(Long employeeId, String name) throws InvalidInputException {
         this.employeeId = employeeId;
         this.name = name;
 //        this.employeeType = employeeType;
+        if(employeeId < 1L || name.length() < 2)
+            throw new InvalidInputException("ERROR: Utilizatorul nu a fost inregistrat! Verificati ca datele pe care le introduceti sunt valide!");
     }
 
     public RestaurantEmployee(){

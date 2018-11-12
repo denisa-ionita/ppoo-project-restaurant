@@ -17,6 +17,6 @@ public class Administrator extends RestaurantEmployee implements AdministratorTa
 
     @Override
     public void employeeTasks() {
-        System.out.println("Add stock");
+        System.out.println("Add MenuItem");
     }
 }

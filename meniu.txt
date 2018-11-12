@@ -1,2 +1,5 @@
 1	Coca-Cola	5.5	DRINK	0.0
 2	Fanta	5.0	DRINK	0.0
+3	Sarmale	25.0	FOOD	400.0
+4	Prigat	6.0	DRINK	0.0
+5	Pepsi	5.0	DRINK	5.0

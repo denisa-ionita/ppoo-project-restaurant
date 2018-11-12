@@ -1,6 +1,7 @@
 package com.ppoo.restaurant.project.domains.absstract;
 
 import com.ppoo.restaurant.project.domains.enums.MenuItemType;
+import com.ppoo.restaurant.project.domains.exceptions.InvalidInputException;
 
 public abstract class MenuItem {
 
@@ -10,11 +11,14 @@ public abstract class MenuItem {
     private Integer vat;
     private MenuItemType menuItemType;
 
-    public MenuItem(Long id, String name, Double price, MenuItemType menuItemType) {
+    public MenuItem(Long id, String name, Double price, MenuItemType menuItemType) throws InvalidInputException {
         this.itemId = id;
         this.name = name;
         this.price = price;
         this.menuItemType = menuItemType;
+
+        if(name.length() < 2 || price == 0 || itemId < 1L)
+            throw new InvalidInputException("ERROR: MenuItem nu a fost inregistrat! Verificati ca datele pe care le introduceti sunt valide!");
     }
 
     public MenuItem() {

@@ -24,7 +24,6 @@ public class FileController {
     List<Order> orderList;
     List<RestaurantEmployee> employeeList;
 
-
     ObjectInputStream objectInputStream;
     FileInputStream fileInputStream;
 
@@ -160,6 +159,17 @@ public class FileController {
         return menuItem;
     }
 
+    public MenuItem getMenuItemByName(String name){
+        MenuItem menuItem = null;
+
+        for(MenuItem mi: menuItems){
+            if(mi.getName().compareTo(name) == 0)
+                menuItem = mi;
+        }
+
+        return menuItem;
+    }
+
     public void writeNewLineForUpdateMenuItem(String newLine, int noOfLineToModify){
         int lineNoFind = 0;
         String line;
@@ -263,6 +273,8 @@ public class FileController {
 
         menuItems.remove(menuItemToRemove);
 
+        System.out.println("MenuItem sters cu succes!");
+
         rewriteMenuItemListToFile();
 
     }
@@ -297,9 +309,7 @@ public class FileController {
     //ORDER
     public void getAllOrders(){
 
-        Date currentDate = new Date();
-
-        file = configureFile("comenzi-" + Constants.simpleDateFormat.format(currentDate) + ".txt");
+        file = configureFile("comenzi-restaurant.txt");
 
         try{
 
@@ -307,16 +317,14 @@ public class FileController {
             bufferedReader = new BufferedReader(fileReader);
 
             String line;
-            String[] splittedLine;
-            String[] orderItems;
-            List<OrderItem> orderItemList = new ArrayList<>();
 
             while((line = bufferedReader.readLine()) != null){
 
-                splittedLine = line.split("\t");
-
-
+                getOrderDetailsFromFile(line);
             }
+
+            bufferedReader.close();
+            fileReader.close();
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -326,6 +334,77 @@ public class FileController {
 
     }
 
+    public void getOrderDetailsFromFile(String fileName){
+
+        file = configureFile(fileName + ".txt");
+
+        String[] fileNameSplit = fileName.split("-");
+
+        Order order;
+
+        FileReader currentFileReader;
+        BufferedReader currentBufferedReader;
+
+        try {
+            currentFileReader = new FileReader(file);
+            currentBufferedReader = new BufferedReader(currentFileReader);
+
+            String line;
+            String[] lineSplitted;
+            int lineNumber = 1;
+            List<OrderItem> orderItemList = new ArrayList<>();
+            RestaurantEmployee waiter = null;
+
+            while((line = currentBufferedReader.readLine()) != null){
+
+                if(lineNumber == 2) {
+                    // ospatarul
+                    lineSplitted = line.split(": ");
+                    waiter = getEmployeeByName(lineSplitted[1]);
+                } else if(lineNumber!=1 && line.compareTo("--------------------------------------------------------------") != 0 && !line.contains("TOTAL")){
+                    lineSplitted = line.split(" ");
+                    // 0 - nume, 1 - x, 2 - number, 3 - =, 4 - total
+                    MenuItem menuItem = getMenuItemByName(lineSplitted[0]);
+
+                    OrderItem orderItem = new OrderItem(menuItem, Integer.valueOf(lineSplitted[2]));
+                    orderItemList.add(orderItem);
+                }
+
+                lineNumber++;
+            }
+
+            order = new Order(Long.valueOf(fileNameSplit[1]), orderItemList, (Waiter) waiter);
+            orderList.add(order);
+
+            currentBufferedReader.close();
+            currentFileReader.close();
+
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void writeToOrderFile(String fileName){
+
+        file = configureFile("comenzi-restaurant.txt");
+
+        try {
+            fileWriter = new FileWriter(file, true);
+            bufferedWriter = new BufferedWriter(fileWriter);
+
+            bufferedWriter.write(fileName + System.lineSeparator());
+
+            bufferedWriter.close();
+            fileWriter.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public Long getLastOrderId(){
 
         return (orderList.size()>0)?orderList.get(orderList.size()-1).getOrderId():0L;
@@ -333,8 +412,6 @@ public class FileController {
 
     public void insertOrder(Order order){
         // scrie cate un fisier separat pt fiecare comanda
-
-//        Order order = systemInputController.addNewOrder(waiter);
 
         file = configureFile("comanda-" + order.getOrderId() + ".txt");
 
@@ -370,22 +447,45 @@ public class FileController {
 
     }
 
-    public void updateOrder(Order order){
+    public void printOrder(Long orderId){
 
-        file = configureFile("comanda-" + order.getOrderId() + ".txt");
+        file = configureFile("comanda-" + orderId + ".txt");
 
         try {
-            fileWriter = new FileWriter(file, true);
-            bufferedWriter = new BufferedWriter(fileWriter);
+            fileReader = new FileReader(file);
+            bufferedReader = new BufferedReader(fileReader);
 
+            String line;
 
+            while((line = bufferedReader.readLine()) != null){
+                System.out.println(line);
+            }
 
-
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+    public void showOrders(){
+        for(Order order: orderList){
+            printOrder(order.getOrderId());
+        }
+    }
+
+    public Order getOrderById(Long id){
+        int indexOfCurrentEmployee = -1;
+
+        for(Order order: orderList){
+            if(order.getOrderId() == id)
+                indexOfCurrentEmployee = orderList.indexOf(order);
+        }
+
+        return orderList.get(indexOfCurrentEmployee);
+    }
+
+    //EMPLOYEES
     public boolean checkEmployeeInfo(Long employeeId, String name, EmployeeType employeeType){
 
         boolean isActive = false;
@@ -445,7 +545,7 @@ public class FileController {
             fileWriter = new FileWriter(file, true);
             bufferedWriter = new BufferedWriter(fileWriter);
 
-            bufferedWriter.write(employee.getEmployeeId() + "\t" + employee.getEmployeeType().name() + "\t" + employee.getName() + System.lineSeparator());
+            bufferedWriter.write(employee.getEmployeeId() + "\t" + employee.getEmployeeType().name().toUpperCase() + "\t" + employee.getName() + System.lineSeparator());
 
             bufferedWriter.close();
             fileWriter.close();
@@ -467,6 +567,23 @@ public class FileController {
         }
 
         return employeeList.get(indexOfCurrentEmployee);
+    }
+
+    public RestaurantEmployee getEmployeeByName(String name){
+        int indexOfCurrentEmployee = -1;
+
+        for(RestaurantEmployee restaurantEmployee: employeeList){
+            if(restaurantEmployee.getName().compareTo(name) == 0)
+                indexOfCurrentEmployee = employeeList.indexOf(restaurantEmployee);
+        }
+
+        return employeeList.get(indexOfCurrentEmployee);
+    }
+
+
+    // PERSISTANCE DATA => EXIT
+    public void exitAppWithFileUpdate(){
+        rewriteMenuItemListToFile();
     }
 
 }
